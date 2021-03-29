@@ -1,16 +1,16 @@
 {
     "modes": [
         {
-            "name": "Dummy ESP8266",
-            "description": "Dummy Description for ESP8266",
-            "version": "X",
-            "file": "dummy-esp8266.bin"
+            "name": "ESPixelStick Unify - Generic",
+            "description": "Unified build for ESPixelStick V3 hardware",
+            "version": "4.0-dev1 (Travis-CI Build)",
+            "file": "espixelstick-travis.bin"
         },
         {
-            "name": "Dummy ESP32",
-            "description": "Dummy Description for ESP32",
-            "version": "X",
-            "file": "dummy-esp32.bin"
+            "name": "ESPixelStick Unify - ESP32",
+            "description": "Unified build for ESP32 hardware",
+            "version": "4.0-dev1 (Travis-CI Build)",
+            "file": "espixelstick-travis32.bin"
         }
     ],
 
@@ -31,19 +31,18 @@
             }
         },
         {
-            "name": "ESP32_LoLin_16MB_1.5M",
+            "name": "ESPixelStick Unify (LoLin_ESP32_PRO_16MB_2MB)",
             "espplatformname": "esp32",
             "esptool": {
-                "reset": "ck",
-                "baudrate": "115200",
+                "reset": "nodemcu",
+                "baudrate": "921600",
                 "fsloc": "0x290000",
-                "binloc": "0x10000"
-
+                "binloc": "0x00010000"
             },
             "filesystem": {
                 "page": "256",
                 "block": "4096",
-                "size": "1507328"
+                "size": "2072576"
             }
         }
     ]
