@@ -6,9 +6,9 @@
         },
         "network": {
             "cfgver": "1",
-            "ssid": "MaRtInG",
-            "passphrase": "martinshomenetwork",
-            "hostname": "esps-29b037",
+            "ssid": "",
+            "passphrase": "",
+            "hostname": "",
             "ip": "(IP unset)",
             "netmask": "(IP unset)",
             "gateway": "(IP unset)",
