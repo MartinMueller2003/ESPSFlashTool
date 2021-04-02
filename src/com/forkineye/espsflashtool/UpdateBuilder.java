@@ -35,7 +35,7 @@ public class UpdateBuilder {
     private enum RecordType {
         NULL_RECORD(0x00),
         SKETCH_IMAGE(0x01),
-        SPIFFS_IMAGE(0x02),
+        FS_IMAGE(0x02),
         EEPROM_IMAGE(0x03);
         
         private final int value;
@@ -49,13 +49,13 @@ public class UpdateBuilder {
         }
     }
     
-    public static void build (String sketch, String spiffs, String target) throws IOException {
+    public static void build (String sketch, String filesystem, String target) throws IOException {
         DataInputStream dsSketch = new DataInputStream(new FileInputStream(sketch));
-        DataInputStream dsSpiffs = new DataInputStream(new FileInputStream(spiffs));
+        DataInputStream dsFilesystem = new DataInputStream(new FileInputStream(filesystem));
         DataOutputStream dsTarget = new DataOutputStream(new FileOutputStream(target));
         
         /*
-        Sketch + SPIFFS combined OTA format
+        Sketch + filesystem combined OTA format
             32bit signature
             16bit version
 
@@ -76,15 +76,15 @@ public class UpdateBuilder {
         for (int i = 0; i < szSketch; i++)
             dsTarget.write(dsSketch.read());
         
-        // Write SPIFFS Image
-        int szSpiffs = (int)new File(spiffs).length();
-        dsTarget.writeShort(RecordType.SPIFFS_IMAGE.getValue());
-        dsTarget.writeInt(szSpiffs);
-        for (int i = 0; i < szSpiffs; i++)
-            dsTarget.write(dsSpiffs.read());
+        // Write filesystem Image
+        int szFilesystem = (int)new File(filesystem).length();
+        dsTarget.writeShort(RecordType.FS_IMAGE.getValue());
+        dsTarget.writeInt(szFilesystem);
+        for (int i = 0; i < szFilesystem; i++)
+            dsTarget.write(dsFilesystem.read());
 
         dsSketch.close();
-        dsSpiffs.close();
+        dsFilesystem.close();
         dsTarget.close();
     }
 }
