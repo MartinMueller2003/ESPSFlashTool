@@ -140,7 +140,7 @@ class ImageTask extends SwingWorker<ImageTaskActionToPerform, String>
             {
                 System.out.println("doInBackground - CREATE_AND_UPLOAD_ALL");
                 status = CreateFileSystemImage();
-                status |= EraseDeviceFlash();
+                // status |= EraseDeviceFlash();
                 status |= UploadFwImages();
                 break;
             }
@@ -303,7 +303,10 @@ class ImageTask extends SwingWorker<ImageTaskActionToPerform, String>
 
         publish("\n-= Uploading Firmware =-");
 
-        Response = exec(cmdEsptool());
+        // build monolithic image
+        exec(cmdEsptool(false));
+
+        Response = exec(cmdEsptool(true));
         if (Response != 0)
         {
             showMessageDialog(null, "Failed to program the ESP.\n"
@@ -357,7 +360,7 @@ class ImageTask extends SwingWorker<ImageTaskActionToPerform, String>
         return list;
     }
 
-    private List<String> cmdEsptool()
+    private List<String> cmdEsptool(boolean uploadFiles)
     {
         List<String> list = new ArrayList<>();
 
@@ -365,23 +368,34 @@ class ImageTask extends SwingWorker<ImageTaskActionToPerform, String>
         list.add(ESPSFlashTool.paths.getEsptool());
         list.add("--chip");
         list.add(ESPSFlashTool.board.chip);
-        list.add("--baud");
-        list.add(ESPSFlashTool.board.esptool.baudrate);
-        list.add("--port");
-        if (ESPSFlashTool.paths.IsWindows())
+
+        if(false == uploadFiles)
         {
-            list.add(ESPSFlashTool.port.getPort().getSystemPortName());
+            list.add("merge_bin");
+            list.add("-o");
+            list.add(ESPSFlashTool.paths.getFwPath() + ESPSFlashTool.board.chip + "/" + ESPSFlashTool.board.name.replace(" ", "_") + "-merged.bin");
         }
         else
         {
-            list.add("/dev/" + ESPSFlashTool.port.getPort().getSystemPortName());
+            list.add("--baud");
+            list.add(ESPSFlashTool.board.esptool.baudrate);
+            list.add("--port");
+            if (ESPSFlashTool.paths.IsWindows())
+            {
+                list.add(ESPSFlashTool.port.getPort().getSystemPortName());
+            }
+            else
+            {
+                list.add("/dev/" + ESPSFlashTool.port.getPort().getSystemPortName());
+            }
+
+            // Reset stuff is located in the esptool options
+            list.addAll(Arrays.asList(ESPSFlashTool.board.esptool.options.split(" ")));
+
+
+            // Flash command can carry options as well
+            list.addAll(Arrays.asList(ESPSFlashTool.board.esptool.flashcmd.split(" ")));
         }
-
-        // Reset stuff is located in the esptool options
-        list.addAll(Arrays.asList(ESPSFlashTool.board.esptool.options.split(" ")));
-
-        // Flash command can carry options as well
-        list.addAll(Arrays.asList(ESPSFlashTool.board.esptool.flashcmd.split(" ")));
 
         // Add all the bin files
         for (Board.Binfile binfile : ESPSFlashTool.board.binfiles)

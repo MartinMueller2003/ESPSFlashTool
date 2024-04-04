@@ -1,15 +1,20 @@
 {
+  "cfgver": 1.0,
+  "init": true,
+  "device": {
+    "id": "ESPixelStick"
+  },
   "network": {
     "ssid": "",
     "passphrase": "",
     "hostname": "",
-    "ip": "192.168.1.10",
-    "netmask": "255.255.255.0",
-    "gateway": "192.168.1.1",
+    "ip": "",
+    "netmask": "",
+    "gateway": "",
     "dhcp": true,
-    "ap_fallback": true
-  },
-  "device": {
-    "id": "ESPixelStick"
+    "sta_timeout": 15.0,
+    "ap_fallback": true,
+    "ap_timeout": 120.0,
+    "ap_reboot": false
   }
 }
